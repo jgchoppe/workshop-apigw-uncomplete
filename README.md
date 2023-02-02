@@ -99,7 +99,7 @@ If you have any other questions about the configuration, let me know!
 
 Before diving into your first deployment, let’s connect to the AWS account!
 
-You received an email containing your AWS credentials, so you can follow this [link](https://www.notion.so/AWS-API-Gateway-83ee62376c6d47b999ae549d0d28d13f) and enter your credentials to access the AWS account.
+You received an email containing your AWS credentials, so you can follow this [link](https://console.aws.amazon.com/) and enter your credentials to access the AWS account.
 
 > ⚠️ Make sure to select `IAM user` if needed on the first page before clicking on the `Next` button.
 >
