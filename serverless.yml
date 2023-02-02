@@ -1,0 +1,91 @@
+service: apigw-workshop
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: eu-west-1
+  environment:
+    REGION: "eu-west-1"
+    TODO_LIST_TABLE: "TODO_LIST_TABLE_${opt:stage, self:provider.stage, 'default'}"
+  # https://www.serverless.com/framework/docs/providers/aws/guide/iam#the-default-iam-role
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: /hello
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        MfaConfiguration: OFF
+        UserPoolName: "todo-list-pool-${opt:stage, self:provider.stage, 'default'}"
+        UsernameAttributes:
+          - "email"
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 6
+            RequireLowercase: False
+            RequireNumbers: True
+            RequireSymbols: False
+            RequireUppercase: True
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: "verified_email"
+              Priority: 1
+        AutoVerifiedAttributes:
+          - "email"
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: "todo-list-client-${opt:stage, self:provider.stage, 'default'}"
+        GenerateSecret: False
+        UserPoolId:
+          Ref: CognitoUserPool
+    ApiGatewayAuthorizer:
+      DependsOn:
+        - ApiGatewayRestApi
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: cognito-authorizer
+        IdentitySource: method.request.header.Authorization
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - Fn::GetAtt: [CognitoUserPool, Arn]
+    DynamoDBTasksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: "TODO_LIST_TABLE_${opt:stage, self:provider.stage, 'default'}"
+        AttributeDefinitions:
+          - AttributeName: "PK"
+            AttributeType: "S"
+          - AttributeName: "SK"
+            AttributeType: "S"
+          - AttributeName: "taskId"
+            AttributeType: "S"
+          - AttributeName: "type"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "PK"
+            KeyType: "HASH"
+          - AttributeName: "SK"
+            KeyType: "RANGE"
+        GlobalSecondaryIndexes:
+          - IndexName: "GSI1-PK"
+            KeySchema:
+              - AttributeName: "type"
+                KeyType: "HASH"
+              - AttributeName: "taskId"
+                KeyType: "RANGE"
+            Projection:
+              ProjectionType: "ALL"
+        BillingMode: "PAY_PER_REQUEST"
