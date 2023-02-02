@@ -8,7 +8,7 @@ provider:
   region: eu-west-1
   environment:
     REGION: "eu-west-1"
-    TODO_LIST_TABLE: "TODO_LIST_TABLE_${opt:stage, self:provider.stage, 'default'}"
+    TODO_LIST_TABLE: "TODO_LIST_TABLE_${opt:stage, self:provider.stage, 'default'}_NAME"
   # https://www.serverless.com/framework/docs/providers/aws/guide/iam#the-default-iam-role
 
 functions:
@@ -26,7 +26,7 @@ resources:
       Type: AWS::Cognito::UserPool
       Properties:
         MfaConfiguration: OFF
-        UserPoolName: "todo-list-pool-${opt:stage, self:provider.stage, 'default'}"
+        UserPoolName: "todo-list-pool-${opt:stage, self:provider.stage, 'default'}-NAME"
         UsernameAttributes:
           - "email"
         Policies:
@@ -45,7 +45,7 @@ resources:
     CognitoUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
-        ClientName: "todo-list-client-${opt:stage, self:provider.stage, 'default'}"
+        ClientName: "todo-list-client-${opt:stage, self:provider.stage, 'default'}-NAME"
         GenerateSecret: False
         UserPoolId:
           Ref: CognitoUserPool
@@ -64,7 +64,7 @@ resources:
     DynamoDBTasksTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: "TODO_LIST_TABLE_${opt:stage, self:provider.stage, 'default'}"
+        TableName: "TODO_LIST_TABLE_${opt:stage, self:provider.stage, 'default'}_NAME"
         AttributeDefinitions:
           - AttributeName: "PK"
             AttributeType: "S"
