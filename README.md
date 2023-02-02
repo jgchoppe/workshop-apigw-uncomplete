@@ -146,7 +146,7 @@ endpoint: GET - https://APIGW_ID.execute-api.eu-west-1.amazonaws.com/dev/hello
 
 You can query this endpoint using Postman or Insomnia, I’m using Insomnia:
 
-![CleanShot 2023-01-29 at 20.24.12.png](AWS%20API%20Gateway%2083ee62376c6d47b999ae549d0d28d13f/CleanShot_2023-01-29_at_20.24.12.png)
+![Insomnia](.doc/request.png)
 
 You can now go the AWS Console, and look at the different services, if you’ve done the deployment correctly your resources name should contain your name:
 
