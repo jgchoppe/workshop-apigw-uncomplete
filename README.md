@@ -25,7 +25,7 @@ As you can see in it’s name, this repository is uncompleted. The following ste
 
 ### Serverless Discovery
 
-Before diving into the To-Do list functionalities I want you to focus on the `serverless.yml` file, you must update the `service` value at the top of the file by adding your name at the end of the value, for example: `service: apigw-workshop-jg`. It’s truly important for this workshop to avoid name conflicts between you and the other students.
+Before diving into the To-Do list functionalities I want you to focus on the `serverless.yml` file, you must update the `service` value at the top of the file by adding your name at the end of the value, for example: `service: apigw-workshop-jg`. It’s truly important for this workshop to avoid name conflicts between you and the other students. You also have to change everywhere you see `NAME` in the Serverless file.
 
 Now you can look at its first function:
 
